@@ -3,11 +3,17 @@ language: go
 go:
   - tip
 
+# Some tests write to /tmp but travis doesn't work so well with that. Set our
+# own value TMPDIR so things like os.TempDir will use our custom location.
+env:
+  global:
+    - TMPDIR=$TRAVIS_BUILD_DIR/tmp
+
+# Install dependencies including test dependencies. We could just use `go get
+# -t ./...` but not all examples are meant to compile.
 install:
-  # Install dependencies including tests
   - find . -name "*_test.go" -exec dirname {} \; | uniq | xargs go get -t -v
 
+# Get a list of all directories with test files and test them.
 script:
-  # Get a list of all directories with test files and test them.
-  # We could just use `go test ./...` but not all examples are meant to compile.
   - find . -name "*_test.go" -exec dirname {} \; | uniq | xargs go test
