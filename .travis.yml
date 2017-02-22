@@ -5,7 +5,7 @@ go:
 
 install:
   # Install dependencies including tests
-  - go get -t ./...
+  - find . -name "*_test.go" -exec dirname {} \; | uniq | xargs -I {} echo "./{}" | xargs go get -t
 
 script:
   # Get a list of all directories with test files and test them.
